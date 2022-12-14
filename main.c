@@ -18,8 +18,8 @@ char* separation[4];
 //ls(rootc,"/","home");
 char pathexist[50][19];
 char lastele[25];
-
-exist(pathexist,rootc,0,"Univ8mai1945",0,lastele);
+//
+exist(pathexist,rootc,0,"bin",1);
 displaytree(rootc,1);
 
 

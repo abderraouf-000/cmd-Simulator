@@ -18,8 +18,8 @@ char* separation[4];
 //ls(rootc,"/","home");
 char pathexist[50][19];
 char lastele[25];
-printf("%d",strlen(lastele));
-exist(,rootc,0,"home",0,lastele);
+//
+exist(pathexist,rootc,0,"telechargement\",1,lastele);
 displaytree(rootc,1);
 
 
