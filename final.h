@@ -1,6 +1,8 @@
 #include "string.h"
 #ifndef FINAL_H_INCLUDED
 #define FINAL_H_INCLUDED
+static int space = 100 ;
+
 
 typedef struct treenode* tree;
 struct treenode
@@ -19,6 +21,7 @@ struct nodech
     linked next;
 };
 linked pathscan(char[]);
+tree createtreenode (int ,int ,char[]);
 //void exist(char**,tree,int,char*,int,char*);
 
 
@@ -55,6 +58,71 @@ int isitcmd(char cmd[])
     }
     return 0;
 }
+
+
+void mkdir(tree* root,char name[],char path[])
+    {
+        linked pathlist;
+        tree newnode = createtreenode(0,1,name);
+        pathlist = pathscan(path);
+
+        tree trav = *root;
+
+        if((*root)->fils == NULL )
+        {
+//if(!strcmp(pathlist->name,trav->nom))
+            (*root)->fils = newnode;
+//else {printf("Wrong path or not found !!");}
+        }
+
+        else
+        {
+
+// loop to arrive last name in our path.
+            while(trav!= NULL && pathlist != NULL && trav -> fils != NULL)
+            {
+
+
+                if(!strcmp(pathlist->name,trav->nom))
+                {
+
+                    pathlist = pathlist->next;
+                    trav = trav->fils;
+                }
+
+                if(pathlist)
+                {
+                    while(trav->frere != NULL && strcmp(trav->nom,pathlist->name))
+                    {
+                        trav = trav->frere;
+                    }
+                }
+            }
+
+            if(pathlist == NULL)      // inserting in frere last position
+            {
+                while(trav->frere != NULL)
+                {
+                    if(!strcasecmp(name,trav->nom)){
+                        printf("There is a Folder with the same name !! ");
+                        return;
+                    }
+                    trav = trav->frere;
+
+                }
+                trav->frere = newnode;
+            }
+            else
+            {
+                trav->fils = newnode;
+            }
+
+        }
+
+    }
+
+
+
 
 
 
@@ -169,7 +237,6 @@ void ls(tree root,char path[],char foldername[]){
 
     linked pathlist;
     tree trav = root;
-    printf("%s\n",fullpath);
     pathlist = pathscan(fullpath);
 while(trav!= NULL && pathlist != NULL && trav -> fils != NULL)
             {
@@ -207,12 +274,177 @@ while(trav!= NULL && pathlist != NULL && trav -> fils != NULL)
 
             }
 
+}
 
 
+
+
+void deletingtreenode(tree* delnode){
+if(*delnode){
+deletingtreenode(&((*delnode)->fils));
+deletingtreenode(&((*delnode)->frere));
+free(*delnode);
+}
 
 }
-void disppatharr(char* path[],int n){
 
+void rm(tree* root,char path[],char name[])
+    {
+        linked pathlist;
+        pathlist = pathscan(path);
+        tree prev = NULL; // to allow insertion after deletion to preserve the link
+        linked lastpath; // to save the "pere" to know where we insert fils or frere , prev = lastpath => in fils
+        tree trav = *root;
+
+// loop to arrive last name in our path.
+            while(trav!= NULL && pathlist != NULL && trav -> fils != NULL)
+            {
+
+
+                if(!strcmp(pathlist->name,trav->nom))
+                {
+                    prev = trav;
+                    lastpath = pathlist;
+                    pathlist = pathlist->next;
+                    trav = trav->fils;
+                }
+
+                if(pathlist)
+                {
+                    while(trav->frere != NULL && strcmp(trav->nom,pathlist->name))
+                    {
+                        prev = trav;
+                        trav = trav->frere;
+                    }
+                }
+            }
+
+            if(pathlist == NULL)      // deleting from les freres
+            {
+
+                while(trav != NULL)
+                {
+
+                    if(!strcasecmp(trav->nom,name)){
+                         if(!strcasecmp(prev->nom,lastpath->name)){
+                                printf("pere pere !!");
+                         prev->fils  =  trav->frere;
+                        }
+                    else{
+                        prev->frere =  trav->frere;
+                        printf("kjlbl");
+                    }
+                         tree travorigin = trav; // to save the adress of the trav pointer
+                         trav = trav->fils;       //to delete it after deleting it's children
+                         deletingtreenode(&(trav));
+                         free(travorigin);
+                        return;
+
+                    }
+                    else{
+
+                    prev = trav;
+                    trav = trav->frere;
+                    }
+                }
+
+            }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+ void mkfile(tree* root,char name[],char path[],int nodesize)
+    {
+
+        linked pathlist;
+        tree newnode = createtreenode(nodesize,0,name);
+        if(nodesize > space){
+            printf("No More Available Space !! ");
+            return;
+        }
+        pathlist = pathscan(path);
+
+        tree trav = *root;
+
+        if((*root)->fils == NULL )
+        {
+//if(!strcmp(pathlist->name,trav->nom))
+            (*root)->fils = newnode;
+//else {printf("Wrong path or not found !!");}
+        }
+
+        else
+        {
+
+// loop to arrive last name in our path.
+            while(trav!= NULL && pathlist != NULL && trav -> fils != NULL)
+            {
+
+
+                if(!strcmp(pathlist->name,trav->nom))
+                {
+
+                    pathlist = pathlist->next;
+                    trav = trav->fils;
+                }
+
+                if(pathlist)
+                {
+                    while(trav->frere != NULL && strcmp(trav->nom,pathlist->name))
+                    {
+                        trav = trav->frere;
+                    }
+                }
+            }
+
+            if(pathlist == NULL)      // inserting in frere last position
+            {
+                while(trav->frere != NULL)
+                {
+
+                    if(!strcasecmp(name,trav->nom)){
+                        printf("There is a File with the same name !! ");
+                        return;
+                    }
+
+                    trav = trav->frere;
+                }
+                space = space - nodesize;
+                trav->frere = newnode;
+            }
+            else
+            {
+                trav->fils = newnode;
+                space = space - nodesize;
+            }
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+void disppatharr(char* path[],int n){
+printf("File is Found ! ");
 printf("\n");
 printf("%s",path[0]);
 for(int i = 1 ; i < n ; i++ ){
@@ -221,14 +453,29 @@ printf("%s/",path[i]);
 printf("\n");
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // "filsornot" if it is frere we will not add it to our array
-void exist(char* path[],tree root,int i,char* name,int filsornot){
+void exist(char* path[],tree root,int i,char* name,int filsornot,int* found){
 
 if(root){
 
 
 if(!strcmp(root->nom,name)){
 disppatharr(path,i);
+*found = 1;
 }
 
 
@@ -245,13 +492,16 @@ path[i]=root->nom;
 
 
 
-exist(path,root->fils,i+1,name,1);
-exist(path,root->frere,i,name,0);
+exist(path,root->fils,i+1,name,1,found);
+exist(path,root->frere,i,name,0,found);
 }
 
 
 
 }
+
+
+
 
 
 
@@ -418,7 +668,7 @@ return pathelefound;
                 j = 0;
             }
                 else if( oneslash == 0 && path[i] == '/'){
-                    ele[j] = path[i];
+                     ele[j] = path[i];
                     j++;
                 }
 

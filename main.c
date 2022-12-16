@@ -14,13 +14,21 @@ char command[] = {"  /fdfd/fdfdfd   rm thing"};
 int n =  3; // number of command elements
 char* separation[4];
 
-//printf("%d\n",pathfound(rootc,"/"));
-//ls(rootc,"/","home");
+
 char pathexist[50][19];
 char lastele[25];
+int found = 0;
 //
-exist(pathexist,rootc,0,"bin",1);
+exist(pathexist,rootc,0,"telechargement",1,&found);
+if(!found)printf("File is not found !!");
+mkdir(&rootc,"no","/root");
+//printf("%d\n",pathfound(rootc,"/"));
+mkfile(&rootc,"prayer","/bin",50);
+ls(rootc,"/bin","");
+printf("%d",space);
+rm(&rootc,"/bin","prayer");
 displaytree(rootc,1);
+
 
 
 
