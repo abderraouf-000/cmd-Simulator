@@ -1,9 +1,12 @@
 # depslib dependency file v1.0
-1671187202 source:c:\users\lahmar raouf\desktop\c programs\tpfinal\main.c
+1671966539 source:c:\users\lahmar raouf\desktop\c programs\tpfinal\main.c
 	<stdio.h>
 	<stdlib.h>
 	"final.h"
+	<ctype.h>
 
-1671187358 c:\users\lahmar raouf\desktop\c programs\tpfinal\final.h
+1671966912 c:\users\lahmar raouf\desktop\c programs\tpfinal\final.h
 	"string.h"
+	<ctype.h>
+	<string.h>
 
